@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  quiz: one
+  date: 2019-07-11
+  location: MyString
+  winner: one
+
+two:
+  quiz: two
+  date: 2019-07-11
+  location: MyString
+  winner: two

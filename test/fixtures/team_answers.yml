@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  question: one
+  quiznight: one
+  participation: one
+  answer: one
+
+two:
+  question: two
+  quiznight: two
+  participation: two
+  answer: two
