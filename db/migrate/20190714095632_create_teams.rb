@@ -5,7 +5,6 @@ class CreateTeams < ActiveRecord::Migration[5.2]
     create_table :teams do |t|
       t.string :team_name
       t.string :email
-      t.string :username
       t.string :password_digest
 
       t.timestamps
