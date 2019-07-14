@@ -1,4 +1,8 @@
+# frozen_string_literal: true
+
 class QuizNight < ApplicationRecord
   belongs_to :quiz
-  belongs_to :winner
+
+  has_many :participations
+
 end

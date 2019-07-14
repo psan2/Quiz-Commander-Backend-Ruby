@@ -1,11 +1,11 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  host: one
+  host_id: 1
   nickname: MyString
   public: false
 
 two:
-  host: two
+  host_id: 1
   nickname: MyString
   public: false

@@ -1,11 +1,17 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
+  host_id: 1
   type: 
-  question_content: MyString
-  answer: one
+  question_content: MyText
+  aux_content_url: MyString
+  correct_answer_ids: 
+  nickname: MyString
 
 two:
+  host_id: 1
   type: 
-  question_content: MyString
-  answer: two
+  question_content: MyText
+  aux_content_url: MyString
+  correct_answer_ids: 
+  nickname: MyString

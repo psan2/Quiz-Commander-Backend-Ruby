@@ -3,7 +3,8 @@ class CreateHosts < ActiveRecord::Migration[5.2]
     create_table :hosts do |t|
       t.string :name
       t.string :username
-      t.text :password_digest
+      t.string :email
+      t.string :password_digest
 
       t.timestamps
     end

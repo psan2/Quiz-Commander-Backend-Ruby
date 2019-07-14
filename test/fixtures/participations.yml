@@ -1,9 +1,11 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  team: one
+  team_id: 1
+  quiznight_id: 1
   score: 1
 
 two:
-  team: two
+  team_id: 1
+  quiznight_id: 1
   score: 1

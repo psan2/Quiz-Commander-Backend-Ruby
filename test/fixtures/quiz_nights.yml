@@ -1,13 +1,13 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  quiz: one
-  date: 2019-07-11
+  quiz_id: 1
+  date: 2019-07-14
   location: MyString
-  winner: one
+  winning_team_id: 1
 
 two:
-  quiz: two
-  date: 2019-07-11
+  quiz_id: 1
+  date: 2019-07-14
   location: MyString
-  winner: two
+  winning_team_id: 1

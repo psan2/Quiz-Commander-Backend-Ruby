@@ -1,9 +1,11 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  quiz: one
-  round: one
+  quiz_id: 1
+  round_id: 1
+  index_in_quiz: 1
 
 two:
-  quiz: two
-  round: two
+  quiz_id: 1
+  round_id: 1
+  index_in_quiz: 1

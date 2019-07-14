@@ -1,8 +1,9 @@
 class CreateQuizRounds < ActiveRecord::Migration[5.2]
   def change
     create_table :quiz_rounds do |t|
-      t.references :quiz, foreign_key: true
-      t.references :round, foreign_key: true
+      t.integer :quiz_id
+      t.integer :round_id
+      t.integer :index_in_quiz
 
       t.timestamps
     end
