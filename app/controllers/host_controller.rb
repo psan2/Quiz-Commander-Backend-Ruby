@@ -2,7 +2,7 @@ class HostController < ApplicationController
   def create
     host = Host.find_by(username: params[:username])
     if host && host.authenticate(params[:password])
-      payload = { host_id: host.id }
+      payload = { host_id: host.id, persona: 'host' }
       token = issue_token(payload)
       render json: { jwt: token, username: host.username }
     else
