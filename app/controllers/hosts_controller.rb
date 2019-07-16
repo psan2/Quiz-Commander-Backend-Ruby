@@ -5,7 +5,7 @@ class HostsController < ApplicationController
   def login
     host = Host.find_by(username: params[:username])
     if host && host.authenticate(params[:password])
-      payload = { host_id: host.id, persona: 'host' }
+      payload = { host_id: host.id, persona: 'hosts' }
       token = issue_token(payload)
       render json: { jwt: token, username: host.username }
     else
@@ -26,7 +26,7 @@ class HostsController < ApplicationController
 
     if host.valid?
       host.save
-      token = issue_token({ host_id: host.id, persona: 'host' })
+      token = issue_token({ host_id: host.id, persona: 'hosts' })
       render json: { jwt: token, username: host.username }
     else
       render json: host.errors.full_messages
@@ -47,7 +47,7 @@ class HostsController < ApplicationController
     params.require(:host).permit(:name, :username, :email, :password)
   end
 
-  def host_hash_maker(host = current_host)
-    host_hash = { username: host[:username], id: host[:id], persona: 'host' }
+  def host_hash_maker(host = current_user)
+    host_hash = { username: host[:username], id: host[:id], persona: 'hosts' }
   end
 end

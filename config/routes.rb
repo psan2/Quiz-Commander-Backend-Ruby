@@ -7,9 +7,9 @@ Rails.application.routes.draw do
   resources :hosts, only: %i[show create update delete]
   resources :questions
   resources :round_questions, only: %i[create delete]
-  resources :rounds, only: %i[show create delete]
+  resources :rounds
   resources :quiz_rounds, only: %i[create delete]
-  resources :quizzes, only: %i[show create update delete]
+  resources :quizzes
   resources :answers, only: %i[create update delete]
 
   resources :teams, only: %i[show create update delete]

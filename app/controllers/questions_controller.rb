@@ -26,6 +26,7 @@ class QuestionsController < ApplicationController
 
   def question_params
     params.require(:question).permit(
+      :host_id,
       :question_type,
       :question_content,
       :aux_content_url,

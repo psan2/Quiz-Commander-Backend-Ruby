@@ -27,9 +27,9 @@ class ApplicationController < ActionController::API
     persona = get_persona
     decoded_token = decode_token(token)
     if !!decoded_token == true
-      if decoded_token['persona'] == 'host'
+      if decoded_token['persona'] == 'hosts'
         Host.find(decoded_token['host_id'])
-      elsif decoded_token['persona'] == 'team'
+      elsif decoded_token['persona'] == 'teams'
         Team.find(decoded_token['team_id'])
       end
     else
