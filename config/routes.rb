@@ -1,17 +1,19 @@
 Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
 
-  namespace :api do
-    namespace :v1 do
-      resources :teams, only: %i[index create]
-      resources :hosts, only: %i[index create]
-    end
-  end
+  post 'teams/login', to: 'teams#login'
+  post 'hosts/login', to: 'hosts#login'
 
-  post '/team/create', to: 'team#create'
-  get '/team/show', to: 'team#show'
-  post '/host/create', to: 'host#create'
-  get '/host/show', to: 'host#show'
-
+  resources :hosts, only: %i[show create update delete]
   resources :questions
+  resources :round_questions, only: %i[create delete]
+  resources :rounds, only: %i[show create delete]
+  resources :quiz_rounds, only: %i[create delete]
+  resources :quizzes, only: %i[show create update delete]
+  resources :answers, only: %i[create update delete]
+
+  resources :teams, only: %i[show create update delete]
+  resources :quiz_nights, only: %i[show create delete]
+  resources :team_answers, only: %i[create delete]
+  resources :participations, only: %i[create update delete]
 end

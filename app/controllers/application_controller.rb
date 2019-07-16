@@ -1,11 +1,12 @@
 class ApplicationController < ActionController::API
   def issue_token(payload)
-    debugger
     JWT.encode(payload, ENV['RAILS_SECRET'])
   end
 
   def decode_token(token)
     JWT.decode(token, ENV['RAILS_SECRET'])[0]
+  rescue JWT::DecodeError
+    false
   end
 
   def get_token
@@ -16,22 +17,37 @@ class ApplicationController < ActionController::API
     request.headers['Persona']
   end
 
-  def current_user
-    persona = get_persona
-    token = get_token
-
-    decoded_token = decode_token(token)
-
-    if decoded_token.persona == 'host'
-      user = Host.find(decoded_token['user_id'])
-    elsif decoded_token.persona == 'team'
-      user = Team.find(decoded_token['user_id'])
-    end
-
-    user_hash = { username: user[:username], id: user[:id] }
+  def logged_in
+    user = current_user
+    !!user ? user.class.name.downcase : false
   end
 
-  def logged_in
-    !!current_user
+  def current_user
+    token = get_token
+    persona = get_persona
+    decoded_token = decode_token(token)
+    if !!decoded_token == true
+      if decoded_token['persona'] == 'host'
+        Host.find(decoded_token['host_id'])
+      elsif decoded_token['persona'] == 'team'
+        Team.find(decoded_token['team_id'])
+      end
+    else
+      false
+    end
+  end
+
+  def require_host_login
+    unless logged_in == 'host'
+      render json: { error: 'Must be logged in on a host account.' }
+    end
+    @host = current_user
+  end
+
+  def require_team_login
+    unless logged_in == 'team'
+      render json: { error: 'Must be logged in on a team account.' }
+    end
+    @team = current_user
   end
 end
