@@ -4,6 +4,4 @@ class Question < ApplicationRecord
   has_many :round_questions
   has_many :rounds, through: :round_questions
   has_many :quizzes, through: :round_questions
-
-  
 end
