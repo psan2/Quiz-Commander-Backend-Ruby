@@ -24,15 +24,22 @@ class QuestionsController < ApplicationController
     render json: QuestionSerializer.new(question, options)
   end
 
+  def update
+    question = Question.find(params[:id])
+    question.update(question_params)
+    options = { include: %i[answers] }
+    render json: QuestionSerializer.new(question, options)
+  end
+
   private
 
   def question_params
     params.require(:question).permit(
-      :host_id,
       :question_type,
       :question_content,
       :aux_content_url,
-      :nickname
+      :nickname,
+      answers: %i[question_id answer_content correct_answer id]
     )
   end
 end
