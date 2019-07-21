@@ -52,6 +52,11 @@ class QuestionsController < ApplicationController
     render json: QuestionSerializer.new(question, options)
   end
 
+  def destroy
+    Question.find(params[:id]).destroy
+    #build in feedback
+  end
+
   private
 
   def question_params
