@@ -22,6 +22,11 @@ class QuizzesController < ApplicationController
     render json: QuizSerializer.new(quiz)
   end
 
+  def destroy
+    Quiz.find(params[:id]).destroy
+    #build in feedback
+  end
+
   private
 
   def quiz_params
