@@ -1,5 +1,5 @@
 class Question < ApplicationRecord
-  validate :question_must_have_at_least_one_correct_answer
+  # validate :question_must_have_at_least_one_correct_answer
   belongs_to :host
   has_many :answers
   has_many :round_questions

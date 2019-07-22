@@ -3,7 +3,8 @@ class RoundsController < ApplicationController
 
   def index
     rounds = Round.all.where(host_id: current_user['id'])
-    render json: rounds
+    options = { include: %i[questions] }
+    render json: RoundSerializer.new(rounds, options)
   end
 
   def create
@@ -18,8 +19,9 @@ class RoundsController < ApplicationController
   end
 
   def show
+    options = { include: %i[questions] }
     round = Round.find(params[:id])
-    render json: RoundSerializer.new(round)
+    render json: RoundSerializer.new(round, options)
   end
 
   private
