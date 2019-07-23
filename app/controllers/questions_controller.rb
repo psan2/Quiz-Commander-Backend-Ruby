@@ -1,6 +1,6 @@
 class QuestionsController < ApplicationController
   before_action :require_host_login
-  before_action :get_question, only: %i[show update]
+  before_action :get_question, only: %i[show update delete]
 
   def index
     questions = Question.all.where(host_id: current_user['id'])
@@ -52,7 +52,7 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    Question.find(params[:id]).destroy
+    question.destroy
     #build in feedback
   end
 

@@ -1,4 +1,5 @@
 class QuizSerializer
   include FastJsonapi::ObjectSerializer
-  attributes 
+  attributes :nickname
+  has_many :rounds, through: :quiz_rounds
 end

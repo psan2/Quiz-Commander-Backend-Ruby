@@ -3,7 +3,8 @@ class QuizzesController < ApplicationController
 
   def index
     quizzes = Quiz.all.where(host_id: current_user['id'])
-    render json: quizzes
+    options = { include: %i[rounds] }
+    render json: QuizSerializer.new(quizzes, options)
   end
 
   def create

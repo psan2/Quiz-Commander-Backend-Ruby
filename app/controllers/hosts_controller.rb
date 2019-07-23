@@ -23,13 +23,12 @@ class HostsController < ApplicationController
 
   def create
     host = Host.new(host_params)
-
     if host.valid?
       host.save
       token = issue_token({ host_id: host.id, persona: 'hosts' })
       render json: { jwt: token, username: host.username }
     else
-      render json: host.errors.full_messages
+      render json: { error: host.errors.full_messages }
     end
   end
 
@@ -44,7 +43,13 @@ class HostsController < ApplicationController
   private
 
   def host_params
-    params.require(:host).permit(:name, :username, :email, :password)
+    params.require(:host).permit(
+      :name,
+      :username,
+      :email,
+      :password,
+      :password_confirmation
+    )
   end
 
   def host_hash_maker(host = current_user)
