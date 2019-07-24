@@ -34,14 +34,16 @@ class RoundsController < ApplicationController
   end
 
   def update
-    round.nickname = params['rounds']['nickname']
-    round.round_type = params['rounds']['round_type']
+    round = Round.find(params['rounds']['id'])
+    round['nickname'] = params['rounds']['nickname']
+    round['round_type'] = params['rounds']['round_type']
 
     round.round_questions.destroy_all
     params['rounds']['questions'].each do |question|
       RoundQuestion.create(question_id: question['id'], round: round)
     end
 
+    options = { include: %i[questions] }
     render json: RoundSerializer.new(round, options)
   end
 
