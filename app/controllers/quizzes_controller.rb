@@ -9,9 +9,15 @@ class QuizzesController < ApplicationController
 
   def create
     quiz = Quiz.new(quiz_params)
+    quiz.host = current_user
 
     if quiz.valid?
       quiz.save
+
+      params['quiz']['rounds'].each do |round|
+        QuizRound.create(round_id: round['id'], quiz: quiz)
+      end
+
       render json: quiz
     else
       render json: quiz.errors.full_messages
