@@ -1,6 +1,6 @@
 class QuestionsController < ApplicationController
   before_action :require_host_login
-  before_action :get_question, only: %i[show update delete]
+  before_action :get_question, only: %i[show update destroy]
 
   def index
     questions = Question.all.where(host_id: current_user['id'])
@@ -29,6 +29,7 @@ class QuestionsController < ApplicationController
   end
 
   def show
+    question = Question.find(params[:id])
     options = { include: %i[answers] }
     render json: QuestionSerializer.new(question, options)
   end
@@ -52,6 +53,7 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
+    question = Question.find(params[:id])
     question.destroy
     #build in feedback
   end
