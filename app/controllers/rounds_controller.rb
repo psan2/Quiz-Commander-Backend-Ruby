@@ -17,10 +17,8 @@ class RoundsController < ApplicationController
     round.host = current_user
     if round.valid?
       round.save
-      params['rounds']['questions'].each do |question|
-        if question['question_content'] != ''
-          RoundQuestion.create(question_id: question['id'], round: round)
-        end
+      params['rounds']['child_ids'].each do |id|
+        RoundQuestion.create(question_id: id, round: round)
       end
       render json: round
     else
@@ -36,12 +34,14 @@ class RoundsController < ApplicationController
 
   def update
     round = Round.find(params['rounds']['id'])
-    round['nickname'] = params['rounds']['nickname']
-    round['round_type'] = params['rounds']['round_type']
+    round.update(
+      nickname: params['rounds']['nickname'],
+      round_type: params['rounds']['round_type']
+    )
 
     round.round_questions.destroy_all
-    params['rounds']['child_ids'].each do |question|
-      RoundQuestion.create(question_id: question['id'], round: round)
+    params['rounds']['child_ids'].each do |id|
+      RoundQuestion.create(question_id: id, round: round)
     end
 
     options = { include: %i[questions] }
