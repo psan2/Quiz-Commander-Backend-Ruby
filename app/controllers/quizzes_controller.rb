@@ -31,7 +31,7 @@ class QuizzesController < ApplicationController
 
   def update
     quiz = Quiz.find(params['quiz']['id'])
-    quiz['nickname'] = params['quiz']['nickname']
+    quiz.update(nickname: params['quiz']['nickname'])
 
     quiz.quiz_rounds.destroy_all
     params['quiz']['child_ids'].each do |round_id|
