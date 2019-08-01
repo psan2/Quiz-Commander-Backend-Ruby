@@ -1,6 +1,5 @@
 class QuestionsController < ApplicationController
   before_action :require_host_login
-  before_action :get_question, only: %i[show update destroy]
 
   def index
     questions = Question.all.where(host_id: current_user['id'])
@@ -35,6 +34,7 @@ class QuestionsController < ApplicationController
   end
 
   def update
+    question = Question.find(params[:id])
     question.update(question_params)
 
     question.answers.destroy_all
@@ -59,10 +59,6 @@ class QuestionsController < ApplicationController
   end
 
   private
-
-  def get_question
-    question = Question.find(params[:id])
-  end
 
   def question_params
     params.require(:question).permit(

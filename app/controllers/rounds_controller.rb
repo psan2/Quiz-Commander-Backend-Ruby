@@ -1,6 +1,7 @@
 class RoundsController < ApplicationController
   before_action :require_host_login
   before_action :get_round, only: %i[show update]
+
   def index
     rounds = Round.all.where(host_id: current_user['id'])
     options = { include: %i[questions] }
@@ -39,7 +40,7 @@ class RoundsController < ApplicationController
     round['round_type'] = params['rounds']['round_type']
 
     round.round_questions.destroy_all
-    params['rounds']['questions'].each do |question|
+    params['rounds']['child_ids'].each do |question|
       RoundQuestion.create(question_id: question['id'], round: round)
     end
 

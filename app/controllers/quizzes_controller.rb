@@ -13,9 +13,8 @@ class QuizzesController < ApplicationController
 
     if quiz.valid?
       quiz.save
-
-      params['quiz']['rounds'].each do |round|
-        QuizRound.create(round_id: round['id'], quiz: quiz)
+      params['quiz']['child_ids'].each do |id|
+        QuizRound.create(round_id: id, quiz: quiz)
       end
 
       render json: quiz
@@ -25,8 +24,22 @@ class QuizzesController < ApplicationController
   end
 
   def show
+    options = { include: %i[rounds] }
     quiz = Quiz.find(params[:id])
-    render json: QuizSerializer.new(quiz)
+    render json: QuizSerializer.new(quiz, options)
+  end
+
+  def update
+    quiz = Quiz.find(params['quiz']['id'])
+    quiz['nickname'] = params['quiz']['nickname']
+
+    quiz.quiz_rounds.destroy_all
+    params['quiz']['child_ids'].each do |round_id|
+      qz = QuizRound.create(round_id: round_id, quiz: quiz)
+    end
+
+    options = { include: %i[rounds] }
+    render json: QuizSerializer.new(quiz, options)
   end
 
   def destroy
