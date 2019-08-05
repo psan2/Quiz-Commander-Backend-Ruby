@@ -1,10 +1,11 @@
 class QuizzesController < ApplicationController
   before_action :require_host_login
+  before_action :get_quiz, only: %i[show update]
+  @@rounds = { include: %i[rounds] }
 
   def index
     quizzes = Quiz.all.where(host_id: current_user['id'])
-    options = { include: %i[rounds] }
-    render json: QuizSerializer.new(quizzes, options)
+    render json: QuizSerializer.new(quizzes, @@rounds)
   end
 
   def create
@@ -24,30 +25,30 @@ class QuizzesController < ApplicationController
   end
 
   def show
-    options = { include: %i[rounds] }
-    quiz = Quiz.find(params[:id])
-    render json: QuizSerializer.new(quiz, options)
+    @quiz = Quiz.find(params[:id])
+    render json: QuizSerializer.new(quiz, @@rounds)
   end
 
   def update
-    quiz = Quiz.find(params['quiz']['id'])
-    quiz.update(nickname: params['quiz']['nickname'])
+    @quiz.update(nickname: params['quiz']['nickname'])
 
-    quiz.quiz_rounds.destroy_all
+    @quiz.quiz_rounds.destroy_all
     params['quiz']['child_ids'].each do |round_id|
       qz = QuizRound.create(round_id: round_id, quiz: quiz)
     end
 
-    options = { include: %i[rounds] }
-    render json: QuizSerializer.new(quiz, options)
+    render json: QuizSerializer.new(quiz, @@rounds)
   end
 
   def destroy
     Quiz.find(params[:id]).destroy
-    #build in feedback
   end
 
   private
+
+  def get_quiz
+    @quiz = Quiz.find(params['quiz']['id'])
+  end
 
   def quiz_params
     params.require(:quiz).permit(:host_id, :quiz_type, :nickname)
