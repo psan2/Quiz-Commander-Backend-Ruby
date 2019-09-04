@@ -1,12 +1,7 @@
 class QuizzesController < ApplicationController
   before_action :require_host_login
   before_action :get_quiz, only: %i[show update]
-<<<<<<< HEAD
   @@rounds = { include: %i[rounds quiz_rounds] }
-=======
-  @@rounds = { include: %i[rounds] }
-  @@all_children = { include: %i[rounds questions answers] }
->>>>>>> 5985b8df2902ef34ba49d56602d4056aa2728a83
 
   def index
     quizzes = Quiz.all.where(host_id: current_user['id'])
