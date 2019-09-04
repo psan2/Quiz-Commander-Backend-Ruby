@@ -54,7 +54,6 @@ class QuestionsController < ApplicationController
   def destroy
     question = Question.find(params[:id])
     question.destroy
-    #build in feedback
   end
 
   private

@@ -1,7 +1,7 @@
 class QuizzesController < ApplicationController
   before_action :require_host_login
   before_action :get_quiz, only: %i[show update]
-  @@rounds = { include: %i[rounds] }
+  @@rounds = { include: %i[rounds quiz_rounds] }
 
   def index
     quizzes = Quiz.all.where(host_id: current_user['id'])
@@ -33,11 +33,11 @@ class QuizzesController < ApplicationController
     @quiz.update(nickname: params['quiz']['nickname'])
 
     @quiz.quiz_rounds.destroy_all
-    params['quiz']['child_ids'].each do |round_id|
-      qz = QuizRound.create(round_id: round_id, quiz: quiz)
+    params['quiz']['children'].each.with_index(1) do |child, index|
+      qz = QuizRound.create(round_id: child[:id], quiz: @quiz, index_in_quiz:index)
     end
 
-    render json: QuizSerializer.new(quiz, @@rounds)
+    render json: QuizSerializer.new(@quiz, @@rounds)
   end
 
   def destroy

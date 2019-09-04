@@ -1,15 +1,25 @@
+require './app/demo_creation.rb'
+
 class HostsController < ApplicationController
+  include DemoCreation
   before_action :require_host_login
   skip_before_action :require_host_login, only: %i[login create]
 
   def login
     host = Host.find_by(username: params[:username])
     if host && host.authenticate(params[:password])
+
+      #this side-track generates a clean demo instance for visitors who want to try the site without signing up
+      # temporarily disabled due to latency
+      # if host[:username] == "demo"
+      #   host = clean_demo()
+      # end
+
       payload = { host_id: host.id, persona: 'hosts' }
       token = issue_token(payload)
       render json: { jwt: token, username: host.username }
     else
-      render json: { error: "The token couldn't be created. Login failed." }
+      render json: { error: "Sorry, something wasn't quite right. Please try again." }
     end
   end
 

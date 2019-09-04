@@ -1,5 +1,8 @@
 class Question < ApplicationRecord
+  before_destroy :destroy_associated_records
+
   # validate :question_must_have_at_least_one_correct_answer
+
   belongs_to :host
   has_many :answers
   has_many :round_questions
@@ -15,7 +18,11 @@ class Question < ApplicationRecord
     end
   end
 
-  # private
+  private
+
+  def destroy_associated_records
+    self.answers.destroy_all
+  end
 
   # def question_must_have_at_least_one_correct_answer
   #   correct_answer_exists = false
