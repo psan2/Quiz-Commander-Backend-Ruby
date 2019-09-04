@@ -11,7 +11,7 @@ class TeamsController < ApplicationController
   end
 
   def show
-    if logged_in = 'team'
+    if logged_in == 'team'
       render json: current_user
     else
       render json: { error: 'Incorrect token.' }
