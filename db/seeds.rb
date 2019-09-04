@@ -18,8 +18,8 @@ h1 =
   Host.create(
     name: 'Demo Host 1',
     email: 'temp@mail.com',
-    username: 'host1',
-    password: 'password1'
+    username: 'demo',
+    password: 'password'
   )
 h2 =
   Host.create(
@@ -417,28 +417,28 @@ a34 =
   )
 
 #create demo rounds
-r1 = Round.create(host: h1, nickname: 'Demo Round 1', round_type: 'text')
-r2 = Round.create(host: h1, nickname: 'Demo Round 2', round_type: 'text')
-r3 = Round.create(host: h1, nickname: 'Demo Round 3', round_type: 'text')
+r1 = Round.create(host: h1, nickname: 'Demo Round 1')
+r2 = Round.create(host: h1, nickname: 'Demo Round 2')
+r3 = Round.create(host: h1, nickname: 'Demo Round 3')
 
 #add questions to rounds
-Question.all[0..9].each do |question|
-  RoundQuestion.create(question: question, round: r1)
+Question.all[0..9].each.with_index(1) do |question, index|
+  RoundQuestion.create(question: question, round: r1, index_in_round: index)
 end
 
-Question.all[10..19].each do |question|
-  RoundQuestion.create(question: question, round: r2)
+Question.all[10..19].each.with_index(1) do |question, index|
+  RoundQuestion.create(question: question, round: r2, index_in_round: index)
 end
 
-Question.all[20..29].each do |question|
-  RoundQuestion.create(question: question, round: r3)
+Question.all[20..29].each.with_index(1) do |question, index|
+  RoundQuestion.create(question: question, round: r3, index_in_round: index)
 end
 
 #create demo quiz
 qz1 = Quiz.create(host: h1, nickname: 'Demo Quiz 1', public: true)
 
 #add demo rounds to demo quiz
-Round.all.each { |round| QuizRound.create(quiz: qz1, round: round) }
+Round.all.each.with_index(1) { |round, index| QuizRound.create(quiz: qz1, round: round, index_in_quiz: index) }
 
 #create demo teams
 t1 =

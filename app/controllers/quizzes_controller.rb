@@ -1,10 +1,16 @@
 class QuizzesController < ApplicationController
   before_action :require_host_login
+  before_action :get_quiz, only: %i[show update]
+<<<<<<< HEAD
+  @@rounds = { include: %i[rounds quiz_rounds] }
+=======
+  @@rounds = { include: %i[rounds] }
+  @@all_children = { include: %i[rounds questions answers] }
+>>>>>>> 5985b8df2902ef34ba49d56602d4056aa2728a83
 
   def index
     quizzes = Quiz.all.where(host_id: current_user['id'])
-    options = { include: %i[rounds] }
-    render json: QuizSerializer.new(quizzes, options)
+    render json: QuizSerializer.new(quizzes, @@rounds)
   end
 
   def create
@@ -13,9 +19,8 @@ class QuizzesController < ApplicationController
 
     if quiz.valid?
       quiz.save
-
-      params['quiz']['rounds'].each do |round|
-        QuizRound.create(round_id: round['id'], quiz: quiz)
+      params['quiz']['child_ids'].each do |id|
+        QuizRound.create(round_id: id, quiz: quiz)
       end
 
       render json: quiz
@@ -25,16 +30,30 @@ class QuizzesController < ApplicationController
   end
 
   def show
-    quiz = Quiz.find(params[:id])
-    render json: QuizSerializer.new(quiz)
+    @quiz = Quiz.find(params[:id])
+    render json: QuizSerializer.new(@quiz, @@all_children)
+  end
+
+  def update
+    @quiz.update(nickname: params['quiz']['nickname'])
+
+    @quiz.quiz_rounds.destroy_all
+    params['quiz']['children'].each.with_index(1) do |child, index|
+      QuizRound.create(round_id: child[:id], quiz: @quiz, index_in_quiz:index)
+    end
+
+    render json: QuizSerializer.new(@quiz, @@rounds)
   end
 
   def destroy
     Quiz.find(params[:id]).destroy
-    #build in feedback
   end
 
   private
+
+  def get_quiz
+    @quiz = Quiz.find(params['id'])
+  end
 
   def quiz_params
     params.require(:quiz).permit(:host_id, :quiz_type, :nickname)

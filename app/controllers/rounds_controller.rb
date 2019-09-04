@@ -1,50 +1,46 @@
 class RoundsController < ApplicationController
   before_action :require_host_login
   before_action :get_round, only: %i[show update]
+  @@questions = { include: %i[questions round_questions] }
+
   def index
-    rounds = Round.all.where(host_id: current_user['id'])
-    options = { include: %i[questions] }
-    render json: RoundSerializer.new(rounds, options)
+    @rounds = Round.all.where(host_id: current_user['id'])
+    render json: RoundSerializer.new(@rounds, @@questions)
   end
 
   def create
-    round =
+    new_round =
       Round.new(
-        nickname: params['rounds']['nickname'],
-        round_type: params['rounds']['round_type']
+        nickname: params['round']['nickname'],
       )
-    round.host = current_user
-    if round.valid?
-      round.save
-      params['rounds']['questions'].each do |question|
-        if question['question_content'] != ''
-          RoundQuestion.create(question_id: question['id'], round: round)
-        end
+    new_round.host = current_user
+    debugger
+    if new_round.valid?
+      new_round.save
+      params['round']['child_ids'].each do |id|
+        RoundQuestion.create(question_id: id, round: new_round)
       end
-      render json: round
+      render json: new_round
     else
-      render json: round.errors.full_messages
+      render json: new_round.errors.full_messages
     end
   end
 
   def show
-    options = { include: %i[questions] }
-    round = Round.find(params[:id])
-    render json: RoundSerializer.new(round, options)
+    render json: RoundSerializer.new(@round, @@questions)
   end
 
   def update
-    round = Round.find(params['rounds']['id'])
-    round['nickname'] = params['rounds']['nickname']
-    round['round_type'] = params['rounds']['round_type']
+    @round.update(
+      nickname: params['round']['nickname']
+    )
 
-    round.round_questions.destroy_all
-    params['rounds']['questions'].each do |question|
-      RoundQuestion.create(question_id: question['id'], round: round)
+    @round.round_questions.destroy_all
+    params['round']['children'].each do |child|
+      RoundQuestion.create(question_id: child[:id], round: @round, index_in_round:child[:index])
     end
 
-    options = { include: %i[questions] }
-    render json: RoundSerializer.new(round, options)
+    render json: RoundSerializer.new(@round, @@questions)
   end
 
   def destroy
@@ -56,10 +52,10 @@ class RoundsController < ApplicationController
   private
 
   def round_params
-    params.require(:round).permit(:host_id, :round_type, :nickname)
+    params.require(:round).permit(:host_id, :nickname)
   end
 
   def get_round
-    round = Round.find(params['rounds']['id'])
+    @round = Round.find(params['round']['id'])
   end
 end

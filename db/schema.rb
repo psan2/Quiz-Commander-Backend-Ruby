@@ -87,7 +87,6 @@ ActiveRecord::Schema.define(version: 2019_07_14_101009) do
   create_table "rounds", force: :cascade do |t|
     t.integer "host_id"
     t.string "nickname"
-    t.string "round_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

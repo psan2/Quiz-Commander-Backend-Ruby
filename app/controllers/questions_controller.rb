@@ -1,11 +1,12 @@
 class QuestionsController < ApplicationController
   before_action :require_host_login
-  before_action :get_question, only: %i[show update destroy]
+  before_action :get_question, only: %i[show update]
+  @@options = { include: %i[answers] }
 
   def index
     questions = Question.all.where(host_id: current_user['id'])
-    options = { include: %i[answers] }
-    render json: QuestionSerializer.new(questions, options)
+    @@options = { include: %i[answers] }
+    render json: QuestionSerializer.new(questions, @@options)
   end
 
   def create
@@ -29,15 +30,14 @@ class QuestionsController < ApplicationController
   end
 
   def show
-    question = Question.find(params[:id])
-    options = { include: %i[answers] }
-    render json: QuestionSerializer.new(question, options)
+    @@options = { include: %i[answers] }
+    render json: QuestionSerializer.new(@question, @@options)
   end
 
   def update
-    question.update(question_params)
+    @question.update(question_params)
 
-    question.answers.destroy_all
+    @question.answers.destroy_all
 
     answer_params =
       params[:question][:answers].map do |answer|
@@ -46,22 +46,20 @@ class QuestionsController < ApplicationController
           correct_answer: answer[:correct_answer]
         }
       end
-    answer_params.each { |answer| question.answers.create(answer) }
+    answer_params.each { |answer| @question.answers.create(answer) }
 
-    options = { include: %i[answers] }
-    render json: QuestionSerializer.new(question, options)
+    render json: QuestionSerializer.new(@question, @@options)
   end
 
   def destroy
     question = Question.find(params[:id])
     question.destroy
-    #build in feedback
   end
 
   private
 
   def get_question
-    question = Question.find(params[:id])
+    @question = Question.find(params[:id])
   end
 
   def question_params
